@@ -17,11 +17,11 @@ This process is built on using PostGIS and Python. It has been developed using F
 #### Notes
 This is my first attempt using parcel data to help identify address nodes to building outlines. One of the problems that needed to be overcome was buildings that covered more than one parcel. In some cases it appeared that either the building outline was shifted or that the parcel outline was incorrect.
 
-[Just Over](images/just_over.png)
+![Just Over](images/just_over.png)
 
 Below is an example of a building in the middle of two parcels
 
-[Middle](middle.png)
+![Middle](middle.png)
 
 Query to select the correct parcel. The percentage, I used 80% seem right for this use.
 
