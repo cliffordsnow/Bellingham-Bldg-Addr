@@ -6,12 +6,16 @@ cd ~/OSM/Whatcom/Bellingham
 psql -U postgres -d mygis -f drop.sql
 
 # import addresses, buildings and parcels into postgresql -- transform into EPSG 4326
-SRID1=`/home/clifford/bin/get_epsg.py COB_Shps/COB_land_TaxParcelPolys.shp`
+SRID1=`src/get_epsg.py COB_Shps/COB_land_TaxParcelPolys.shp`
 /usr/bin/shp2pgsql -s ${SRID1}:4326 COB_Shps/COB_land_TaxParcelPolys public.bellingham_parcels | psql -d mygis -U postgres >/dev/null
-SRID2=`/home/clifford/bin/get_epsg.py COB_Shps/COB_land_AddressPoints.shp`
+SRID2=`src/get_epsg.py COB_Shps/COB_land_AddressPoints.shp`
 /usr/bin/shp2pgsql -s ${SRID2}:4326 COB_Shps/COB_land_AddressPoints public.bellingham_addr | psql -d mygis -U postgres >/dev/null
-SRID3=`/home/clifford/bin/get_epsg.py COB_Shps/COB_struc_Buildings.shp`
+SRID3=`src/get_epsg.py COB_Shps/COB_struc_Buildings.shp`
 /usr/bin/shp2pgsql -s ${SRID3}:4326 COB_Shps/COB_struc_Buildings public.bellingham_bldg | psql -d mygis -U postgres >/dev/null
+SRID4=`src/get_epsg.py COB_Shps/COB_tran_WhatcomRoads.shp`
+/usr/bin/shp2pgsql -s ${SRID4}:4326 COB_Shps/COB_tran_WhatcomRoads public.whatcom_all_roads | psql -d mygis -U postgres >/dev/null
+SRID5=`src/get_epsg.py tl_2rd13_53073_vtd10.shp`
+/usr/bin/shp2pgsql -s ${SRID5}:4326 tl_2rd13_53073_vtd10 public.whatcom_votdst | psql -d mygis -U postgres >/dev/null
 
 
 # This section adds fields to the new tables

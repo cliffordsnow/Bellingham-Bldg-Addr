@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS bellingham_parcels CASCADE;
+DROP TABLE IF EXISTS bellingham_bldg CASCADE;
+DROP TABLE IF EXISTS bellingham_addr CASCADE;
+DROP TABLE IF EXISTS whatcom_all_roads CASCADE;
+DROP TABLE IF EXISTS whatcom_votdst CASCADE;
+

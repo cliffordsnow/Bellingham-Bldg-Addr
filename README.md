@@ -4,6 +4,8 @@
 #### Building and Address Import
 This project will import data from the City of [Bellingham](cob.org), WA. Bellingham provides a wide array of data from their website, including docks, sidewalks, trees, fire hydrants, roads, and of course addresses and building outlines. Please feel free to offer suggestions and PR to improve the process.
 
+The import process will use the US Tasking Manager. Voting districts will be used because of they split the work into manageable chunks. Because Washington has gone to all mail in ballots, no current voting district maps are available. Since voting districts are only used to break up the data into small chunks, the 2012 data will suffice. Voting districts can be [downloaded](ftp://ftp2.census.gov/geo/tiger/TIGER2012/VTD/tl_2012_53_vtd10.zip) from the US Census TIGER data.
+
 #### License
 The City of Bellingham offer open data with no strings attached.
 
