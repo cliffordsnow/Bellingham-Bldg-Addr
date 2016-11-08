@@ -9,10 +9,23 @@ The City of Bellingham offer open data with no strings attached.
 
 #### Process
 This process is built on using PostGIS and Python. It has been developed using Fedora 24. It should work on MacOS.
+Steps to build .osm import files
+- Download [Landbase](http://www.cob.org/data/gis/SHP_Files/COB_land_shps.zip) shapefiles from Bellingham GIS
+- Download [Structures](http://www.cob.org/data/gis/SHP_Files/COB_struc_shp.zip) shapefiles from Bellingham GIS
+- Download [Transporation](http://www.cob.org/data/gis/SHP_Files/COB_tran_shp.zip) shapefiles from Bellingham GIS
+- run import.sh to build the Postgresql tables
+- run bellingham_osm.sh to build individual .osm files for import
 
 #### Requirements
 * PostGIS
 * Python
+* Postgresql functions from my [sql](https://github/cliffordsnow/sql) repository
+```
+expand_directions.sql
+expand_roads.sql
+format_roads.sql
+fullname.sql
+```
 
 #### Notes
 This is my first attempt using parcel data to help identify address nodes to building outlines. One of the problems that needed to be overcome was buildings that covered more than one parcel. In some cases it appeared that either the building outline was shifted or that the parcel outline was incorrect.
