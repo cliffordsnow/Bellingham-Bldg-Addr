@@ -21,7 +21,7 @@ This is my first attempt using parcel data to help identify address nodes to bui
 
 Below is an example of a building in the middle of two parcels
 
-![Middle](middle.png)
+![Middle](images/middle.png)
 
 Query to select the correct parcel. The percentage, I used 80% seem right for this use.
 
