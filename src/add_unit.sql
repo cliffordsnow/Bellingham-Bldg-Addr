@@ -1,0 +1,1 @@
+﻿update bellingham_addr set unit = regexp_replace(main_addre, '[0-9A-Z ]+ STE ','') where main_addre like '% STE %'

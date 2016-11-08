@@ -1,0 +1,1 @@
+﻿update bellingham_addr a set bldg_id = b.gid from bellingham_bldg b where st_contains(b.geom, a.geom)
