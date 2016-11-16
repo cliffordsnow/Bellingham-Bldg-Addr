@@ -29,6 +29,15 @@ format_roads.sql
 fullname.sql
 ```
 
+#### Whatcom Roads
+Whatcom roads are available as a background layer. The WMS service can be loaded in JOSM using the images preferences with the following url
+```
+http://67.160.74.76/geoserver/wms?service=WMS&request=GetMap&styles=&TRANSPARENT=TRUE&bbox=-1.37021663844817E7,6214544.26722411,-1.35320129795646E7,6275268.80055685&width=768&height=330
+```
+2.  Press Get Layers, select Whatcom Roads and  
+3.  Change the image type to png
+4.  Name the layer Whatcom Roads
+
 #### Notes
 This is my first attempt using parcel data to help identify address nodes to building outlines. One of the problems that needed to be overcome was buildings that covered more than one parcel. In some cases it appeared that either the building outline was shifted or that the parcel outline was incorrect.
 
