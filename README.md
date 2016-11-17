@@ -4,7 +4,7 @@
 #### Building and Address Import
 This project will import data from the City of [Bellingham](cob.org), WA. Bellingham provides a wide array of data from their website, including docks, sidewalks, trees, fire hydrants, roads, and of course addresses and building outlines. Please feel free to offer suggestions and PR to improve the process.
 
-The import process will use the US Tasking Manager. Voting districts will be used because of they split the work into manageable chunks. Because Washington has gone to all mail in ballots, no current voting district maps are available. Since voting districts are only used to break up the data into small chunks, the 2012 data will suffice. Voting districts can be [downloaded](ftp://ftp2.census.gov/geo/tiger/TIGER2012/VTD/tl_2012_53_vtd10.zip) from the US Census TIGER data.
+The import process will use the US Tasking Manager. Bellingham precincts will be used to break the import into 67 small tasks.
 
 #### License
 The City of Bellingham offer open data with no strings attached.
@@ -12,9 +12,11 @@ The City of Bellingham offer open data with no strings attached.
 #### Process
 This process is built on using PostGIS and Python. It has been developed using Fedora 24. It should work on MacOS.
 Steps to build .osm import files
+-  Download [Planning](http://www.cob.org/data/gis/SHP_Files/COB_plan_shps.zip) shapefiles from Bellingham GIS.
 - Download [Landbase](http://www.cob.org/data/gis/SHP_Files/COB_land_shps.zip) shapefiles from Bellingham GIS
-- Download [Structures](http://www.cob.org/data/gis/SHP_Files/COB_struc_shp.zip) shapefiles from Bellingham GIS
-- Download [Transporation](http://www.cob.org/data/gis/SHP_Files/COB_tran_shp.zip) shapefiles from Bellingham GIS
+- Download [Structures](http://www.cob.org/data/gis/SHP_Files/COB_struc_shps.zip) shapefiles from Bellingham GIS
+- Download [Transporation](http://www.cob.org/data/gis/SHP_Files/COB_tran_shps.zip) shapefiles from Bellingham GIS
+-  unzip the shapefiles
 - run import.sh to build the Postgresql tables
 - run bellingham_osm.sh to build individual .osm files for import
 
