@@ -14,8 +14,8 @@ SRID3=`src/get_epsg.py COB_Shps/COB_struc_Buildings.shp`
 /usr/bin/shp2pgsql -s ${SRID3}:4326 COB_Shps/COB_struc_Buildings public.bellingham_bldg | psql -d mygis -U postgres >/dev/null
 SRID4=`src/get_epsg.py COB_Shps/COB_tran_WhatcomRoads.shp`
 /usr/bin/shp2pgsql -s ${SRID4}:4326 COB_Shps/COB_tran_WhatcomRoads public.whatcom_all_roads | psql -d mygis -U postgres >/dev/null
-SRID5=`src/get_epsg.py tl_2rd13_53073_vtd10.shp`
-/usr/bin/shp2pgsql -s ${SRID5}:4326 tl_2rd13_53073_vtd10 public.whatcom_votdst | psql -d mygis -U postgres >/dev/null
+SRID5=`src/get_epsg.py COB_Shps/COB_plan_Precincts.shp`
+/usr/bin/shp2pgsql -s ${SRID5}:4326 COB_Shps/COB_plan_Precincts public.bellingham_precincts | psql -d mygis -U postgres >/dev/null
 
 
 # This section adds fields to the new tables
@@ -57,3 +57,4 @@ psql -d mygis -U postgres -f add_no2parcel.sql
 
 psql -d mygis -U postgres -f bellingham_ab.sql
 psql -d mygis -U postgres -f bellingham_ao.sql
+

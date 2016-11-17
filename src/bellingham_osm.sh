@@ -6,6 +6,9 @@ if [ ! -d osm ]
 then
 	mkdir osm 
 fi
+
+psql -t -d mygis -U postgres -c "Select precinct_n from bellingham_precincts" | gawk '/[0-9][0-9][0-9]/ {print $1 }' > precincts.lst
+
 	
 
 while read line
@@ -32,8 +35,8 @@ do
       rm osm/${id}.osm.gz
     fi
 
-    pgsql2shp -f /tmp/${id}b -h localhost -u postgres mygis "SELECT b.* FROM bellingham_ba b, whatcom_votdst v WHERE ST_CONTAINS(v.geom, st_centroid(b.geom)) AND vtdst10 = '${id}'"
-    pgsql2shp -f /tmp/${id}a -h localhost -u postgres mygis "SELECT a.* FROM bellingham_ao a, whatcom_votdst v WHERE ST_CONTAINS(v.geom, a.geom) AND vtdst10 = '${id}'"
+    pgsql2shp -f /tmp/${id}b -h localhost -u postgres mygis "SELECT b.* FROM bellingham_ba b, bellingham_precincts v WHERE ST_CONTAINS(v.geom, st_centroid(b.geom)) AND precinct_n = '${id}'"
+    pgsql2shp -f /tmp/${id}a -h localhost -u postgres mygis "SELECT a.* FROM bellingham_ao a, bellingham_precincts v WHERE ST_CONTAINS(v.geom, a.geom) AND precinct_n = '${id}'"
     ~/Development/ogr2osm/ogr2osm.py -f -t bellingham_bldg.py /tmp/${id}b.shp -o /tmp/${id}b.osm
     ~/Development/ogr2osm/ogr2osm.py -f -t bellingham_addr.py /tmp/${id}a.shp -o /tmp/${id}a.osm
 
@@ -41,4 +44,4 @@ do
     python merge_osm2.py /tmp/${id}b.osm /tmp/${id}a.osm ${id}.osm
     mv ${id}.osm osm
     gzip osm/${id}.osm
-done < votdst.lst
+done< precincts.lst
