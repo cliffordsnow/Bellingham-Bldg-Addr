@@ -1,5 +1,5 @@
 ﻿CREATE OR REPLACE VIEW bellingham_ba AS(
-SELECT b.gid,addr_num, unit, street, zip, initcap(municipali) AS city, bldgtype, CASE WHEN num_floors = .5 THEN '.5'
+SELECT b.gid,addr_num, unit, street, zip, initcap(municipali) AS city, name, bldgtype, CASE WHEN num_floors = .5 THEN '.5'
                        	WHEN num_floors = 1.5 THEN '1.5'
                        	WHEN num_floors = 2.5 THEN '2.5'
                        	WHEN num_floors = 0 THEN NULL
@@ -7,7 +7,7 @@ SELECT b.gid,addr_num, unit, street, zip, initcap(municipali) AS city, bldgtype,
 FROM bellingham_addr a, bellingham_bldg b
 WHERE b.gid=bldg_id AND no_addr = 1
 UNION
-SELECT b.gid,NULL AS addr_num, NULL as unit, ''::VARCHAR(80) AS street, ''::VARCHAR(5) AS zip, ''::VARCHAR(50) AS city,
+SELECT b.gid,NULL AS addr_num, NULL as unit, ''::VARCHAR(80) AS street, ''::VARCHAR(5) AS zip, ''::VARCHAR(50) AS city, name,
 bldgtype, CASE WHEN num_floors = .5 THEN '.5'
                	WHEN num_floors = 1.5 THEN '1.5'
                	WHEN num_floors = 2.5 THEN '2.5'
@@ -16,7 +16,7 @@ bldgtype, CASE WHEN num_floors = .5 THEN '.5'
 FROM bellingham_addr a, bellingham_bldg b
 WHERE st_contains(b.geom, a.geom) AND no_addr > 1 
 UNION
-SELECT gid, NULL AS addr_num, NULL as unit, ''::VARCHAR(80) AS street, ''::VARCHAR(5) AS zip, ''::VARCHAR(50) AS city, 
+SELECT gid, NULL AS addr_num, NULL as unit, ''::VARCHAR(80) AS street, ''::VARCHAR(5) AS zip, ''::VARCHAR(50) AS city, name
 bldgtype, CASE WHEN num_floors = .5 THEN '.5'
                 WHEN num_floors = 1.5 THEN '1.5'
                 WHEN num_floors = 2.5 THEN '2.5'
