@@ -1,11 +1,12 @@
 #!/bin/bash
 
-PGDATABASE=cliffordsnow
-PGUSER=cliffordsnow
-SHP2PGSQL=/usr/local/opengeo/bin/shp2pgsql
-ORG2OGR=Library/Frameworks/GDAL.framework/Programs/ogr2ogr
+WORKINGDIR=/home/clifford/OSM/Whatcom/Bellingham
+PGDATABASE=mygis
+PGUSER=postgres
+SHP2PGSQL=`which shp2pgsql`
+ORG2OGR=/home/clifford/bin/ogr2osm.py
 
-cd ~/OSM/Whatcom/Bellingham
+cd ${WORKINGDIR}
 
 wget https://www.cob.org/data/gis/FGDB_Files/COB_Land_public.gdb.zip
 wget https://www.cob.org/data/gis/FGDB_Files/COB_Structures.gdb.zip
@@ -94,4 +95,5 @@ psql -d ${PGDATABASE} -U ${PGUSER} -f add_no2parcel.sql
 
 psql -d ${PGDATABASE} -U ${PGUSER} -f bellingham_ab.sql
 psql -d ${PGDATABASE} -U ${PGUSER} -f bellingham_ao.sql
+
 echo "Done"

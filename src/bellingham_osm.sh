@@ -1,9 +1,9 @@
 #!/bin/bash
 
-WORKINGDIR=/Users/cliffordsnow/OSM/Whatcom/Bellingham
-OGR2OSM=/Users/cliffordsnow/bin/ogr2osm.py
+WORKINGDIR=/home/clifford/OSM/Whatcom/Bellingham
+OGR2OSM=/home/clifford/bin/ogr2osm.py
 PGUSER=postgres
-PGDATABASE=cliffordsnow
+PGDATABASE=mygis
 
 cd ${WORKINGDIR}
 
