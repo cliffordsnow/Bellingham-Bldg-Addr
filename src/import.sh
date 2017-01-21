@@ -1,35 +1,74 @@
 #!/bin/bash
 
-PGDATABASE=mygis
-PGUSER=postgres
-SHP2PGSQL=/usr/bin/shp2pgsql
+PGDATABASE=cliffordsnow
+PGUSER=cliffordsnow
+SHP2PGSQL=/usr/local/opengeo/bin/shp2pgsql
+ORG2OGR=Library/Frameworks/GDAL.framework/Programs/ogr2ogr
 
 cd ~/OSM/Whatcom/Bellingham
 
+#wget https://www.cob.org/data/gis/FGDB_Files/COB_Land_public.gdb.zip
+#wget https://www.cob.org/data/gis/FGDB_Files/COB_Structures.gdb.zip
+#wget https://www.cob.org/data/gis/FGDB_Files/COB_Transportation.gdb.zip
+#wget https://www.cob.org/data/gis/FGDB_Files/COB_Planning.gdb.zip
+
+#unzip -o  COB_Structures.gdb.zip
+#unzip -o  COB_Land_public.gdb.zip
+#unzip -o  COB_Transportation.gdb.zip
+#unzip -o  COB_Planning.gdb.zip
+
+rm *.zip
+
+
+echo "Drop existing tables - we'll recreate"
 # Drop existing tables if they exist
 psql -U ${PGUSER} -d ${PGDATABASE} -f drop.sql
 
-# import addresses, buildings and parcels into postgresql -- transform into EPSG 4326
-SRID1=`/home/clifford/bin/get_epsg.py COB_Shps/COB_land_TaxParcelPolys.shp`
-${SHP2PGSQL} -s ${SRID1}:4326 COB_Shps/COB_land_TaxParcelPolys public.bellingham_parcels | psql -d ${PGDATABASE} -U ${PGUSER} >/dev/null
-SRID2=`/home/clifford/bin/get_epsg.py COB_Shps/COB_land_AddressPoints.shp`
-${SHP2PGSQL} -s ${SRID2}:4326 COB_Shps/COB_land_AddressPoints public.bellingham_addr | psql -d ${PGDATABASE} -U ${PGUSER} >/dev/null
-SRID3=`/home/clifford/bin/get_epsg.py COB_Shps/COB_struc_Buildings.shp`
-${SHP2PGSQL} -s ${SRID3}:4326 COB_Shps/COB_struc_Buildings public.bellingham_bldg | psql -d ${PGDATABASE} -U ${PGUSER} >/dev/null
+# Import Precincts just once. We don't really care if they change.
+if [ ! -f precincts.lst ]
+then
+	echo "Importing Precincts"
+        ogr2ogr -overwrite -a_srs "EPSG:2285" -t_srs "EPSG:4326" -skipfailures -f "PostgreSQL" PG:"host=localhost user=${PGUSER} dbname=${PGDATABASE}" "COB_Data/COB_Planning.gdb" "plan_Precincts" -nln bellingham_precinct -lco GEOMETRY_NAME=geom -select precinct_number
+	psql ${PGDATABASE} -Atc "SELECT precinct_number FROM bellingham_precinct;" > precincts.lst
+fi
+
+# import Buildings 
+
+echo "Import buildings into Postgresql"
+# uncomment the following when COB fixes problem with getting updates to their download service
+#ogr2ogr -overwrite -a_srs "EPSG:2285" -t_srs "EPSG:4326" -skipfailures -f "PostgreSQL" PG:"host=localhost user=${PGUSER} dbname=${PGDATABASE}" "COB_Data/COB_Structures.gdb" "struc_Buildings" -nln bellingham_bldg -lco GEOMETRY_NAME=geom -select year,type,name,num_floors,bldgtype,yrbuilt,ruleid,created_user,created_date,last_edited_user,last_edited_date
+
+# remove the following when COB fixes problem with getting updates to their download service.
+ogr2ogr -overwrite -a_srs "EPSG:2285" -t_srs "EPSG:4326" -skipfailures -f "PostgreSQL" PG:"host=localhost user=${PGUSER} dbname=${PGDATABASE}" "COB_Data/COB_Buildings.gdb" "struc_Buildings" -nln bellingham_bldg -lco GEOMETRY_NAME=geom -select year,type,name,num_floors,bldgtype,yrbuilt,ruleid,created_user,created_date,last_edited_user,last_edited_date
+
+echo "Import parcels into Postgresql"
+# import parcels into ${PGUSER}ql -- transform into EPSG 4326
+ogr2ogr -overwrite -a_srs "EPSG:2285" -t_srs "EPSG:4326" -skipfailures -f "PostgreSQL" PG:"host=localhost user=${PGUSER} dbname=${PGDATABASE}" "COB_Data/COB_Land_public.gdb" "land_TaxParcelPolys" -nln bellingham_parcel -lco GEOMETRY_NAME=geom -select parcel_code,created_date,last_edited_date
+
+echo "Import addresses into Postgresql"
+ogr2ogr -overwrite -a_srs "EPSG:2285" -t_srs "EPSG:4326" -skipfailures -f "PostgreSQL" PG:"host=localhost user=${PGUSER} dbname=${PGDATABASE}" "COB_Data/COB_Land_public.gdb" "land_AddressPoints" -nln bellingham_addr -lco GEOMETRY_NAME=geom -select addr_num,street_name,st_nameid,address_id,main_address_display,zip,plus4,status,parcel_code,created_date,last_edited_date,unittype,unitid,municipality,pointtype,floor,parcel_unitid
+
+echo "Import Roads into Postgresql"
+ogr2ogr -overwrite -a_srs "EPSG:2285" -t_srs "EPSG:4326" -skipfailures -f "PostgreSQL" PG:"host=localhost user=${PGUSER} dbname=${PGDATABASE}" "COB_Data/COB_Transportation.gdb" "tran_WhatcomRoads" -nln whatcom_roads -lco GEOMETRY_NAME=geom -select name,st_prefix,st_name,st_type,st_suffix,nameid,jurisdiction,st_class,oneway,speedlimit,busroute,alt_name,centerlineid,hwy_number,last_edited_date,nameidaddr,truckroute,hierarchy,truckrouteclass
+
+echo "change yrbuilt from 0 to NULL"
+psql -d ${PGDATABASE} -U ${PGUSER} -c "UPDATE bellingham_bldg SET yrbuilt = NULL where yrbuilt = 0;"
+
+echo "start configuring tables"
+# rename objectid to id
+psql -d ${PGDATABASE} -U ${PGUSER} -f rename_objectid2gid.sql
 
 
 # This section adds fields to the new tables
 psql -d ${PGDATABASE} -U ${PGUSER} -f add_columns.sql
 
-# Add spatial indexes for faster intersection queries
-psql -d ${PGDATABASE} -U ${PGUSER} -f add_indexes.sql
-
 # Add unit number to new column unit from main_addre
 psql -d ${PGDATABASE} -U ${PGUSER} -f add_unit.sql
 
-# Fixes no longer needed. CoB fixed the error.
-# psql -d ${PGDATABASE} -U ${PGUSER} -f fix_garfied.sql
+psql -d ${PGDATABASE} -U ${PGUSER} -f add_indexes.sql
+echo "complete configuring tables"
 
+echo "Starting adding information to tables to speed execution later"
 # Add full street name to address
 psql -d ${PGDATABASE} -U ${PGUSER} -f add_full_street.sql
 
@@ -56,3 +95,4 @@ psql -d ${PGDATABASE} -U ${PGUSER} -f add_no2parcel.sql
 
 psql -d ${PGDATABASE} -U ${PGUSER} -f bellingham_ab.sql
 psql -d ${PGDATABASE} -U ${PGUSER} -f bellingham_ao.sql
+echo "Done"
