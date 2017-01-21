@@ -10,13 +10,8 @@ The import process will use the US Tasking Manager. Bellingham precincts will be
 The City of Bellingham offer open data with no strings attached.
 
 #### Process
-This process is built on using PostGIS and Python. It has been developed using Fedora 24. It should work on MacOS.
-Steps to build .osm import files
--  Download [Planning](http://www.cob.org/data/gis/SHP_Files/COB_plan_shps.zip) shapefiles from Bellingham GIS.
-- Download [Landbase](http://www.cob.org/data/gis/SHP_Files/COB_land_shps.zip) shapefiles from Bellingham GIS
-- Download [Structures](http://www.cob.org/data/gis/SHP_Files/COB_struc_shps.zip) shapefiles from Bellingham GIS
-- Download [Transporation](http://www.cob.org/data/gis/SHP_Files/COB_tran_shps.zip) shapefiles from Bellingham GIS
--  unzip the shapefiles
+This process is built on using PostGIS and Python. It has been developed using Fedora 24. It should work on MacOS. 
+To use the process, clone the repository and modify the import.sh and bellingham_osm.sh scripts to define your working directory and access to Postgresql. Before running the scripts, add the functions below to your PostGIS/Postgresql server. They are needed to convert the road names into ones that OSM like.
 - run import.sh to build the Postgresql tables
 - run bellingham_osm.sh to build individual .osm files for import
 
