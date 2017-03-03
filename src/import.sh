@@ -8,9 +8,9 @@ ORG2OGR=/home/clifford/bin/ogr2osm.py
 
 cd ${WORKINGDIR}
 
-wget https://www.cob.org/data/gis/FGDB_Files/COB_Land_public.gdb.zip
-wget https://www.cob.org/data/gis/FGDB_Files/COB_Structures.gdb.zip
-wget https://www.cob.org/data/gis/FGDB_Files/COB_Transportation.gdb.zip
+wget ftp://ftp.cob.org/GIS_DATA/FGDB_Files/COB_Land_public.gdb.zip
+wget ftp://ftp.cob.org/GIS_DATA/FGDB_Files/COB_Structures.gdb.zip
+wget ftp://ftp.cob.org/GIS_DATA/FGDB_Files/COB_Transportation.gdb.zip
 
 unzip -o  COB_Structures.gdb.zip
 unzip -o  COB_Land_public.gdb.zip
@@ -25,7 +25,7 @@ psql -U ${PGUSER} -d ${PGDATABASE} -f drop.sql
 # Import Precincts just once. We don't really care if they change.
 if [ ! -f precincts.lst ]
 then
-	wget https://www.cob.org/data/gis/FGDB_Files/COB_Planning.gdb.zip
+	wget ftp://ftp.cob.org/GIS_DATA/FGDB_Files/COB_Planning.gdb.zip
 	unzip -o  COB_Planning.gdb.zip
 	echo "Importing Precincts"
         ogr2ogr -overwrite -a_srs "EPSG:2285" -t_srs "EPSG:4326" -skipfailures -f "PostgreSQL" PG:"host=localhost user=${PGUSER} dbname=${PGDATABASE}" "COB_Data/COB_Planning.gdb" "plan_Precincts" -nln bellingham_precinct -lco GEOMETRY_NAME=geom -select precinct_number
