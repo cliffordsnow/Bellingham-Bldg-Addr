@@ -10,7 +10,7 @@ The import process will use the US Tasking Manager. Bellingham precincts will be
 The City of Bellingham offer open data with no strings attached.
 
 #### Process
-This process is built on using PostGIS and Python. It has been developed using Fedora 24. It should work on MacOS. 
+This process is built on using PostGIS and Python. It has been developed using Fedora 24. It should work on MacOS.
 To use the process, clone the repository and modify the import.sh and bellingham_osm.sh scripts to define your working directory and access to Postgresql. Before running the scripts, add the functions below to your PostGIS/Postgresql server. They are needed to convert the road names into ones that OSM like.
 - run import.sh to build the Postgresql tables
 - run bellingham_osm.sh to build individual .osm files for import
@@ -29,9 +29,9 @@ fullname.sql
 #### Whatcom Roads
 Whatcom roads are available as a background layer. The WMS service can be loaded in JOSM using the images preferences with the following url
 ```
-http://67.160.74.76/geoserver/wms?service=WMS&request=GetMap&styles=&TRANSPARENT=TRUE&bbox=-1.37021663844817E7,6214544.26722411,-1.35320129795646E7,6275268.80055685&width=768&height=330
+http://24.19.173.134/geoserver/wms?service=WMS&request=GetMap&styles=&TRANSPARENT=TRUE&bbox=-1.37021663844817E7,6214544.26722411,-1.35320129795646E7,6275268.80055685&width=768&height=330
 ```
-2.  Press Get Layers, select Whatcom Roads and  
+2.  Press Get Layers, select Whatcom Roads and
 3.  Change the image type to png
 4.  Name the layer Whatcom Roads
 
