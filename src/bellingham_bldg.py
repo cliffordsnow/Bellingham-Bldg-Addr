@@ -25,11 +25,19 @@ def filterTags(attrs):
         if attrs['BLDGTYPE'] == 'CABIN':
             tags['building'] = 'yes'
         if attrs['BLDGTYPE'] == 'DUPLX':
-            tags['building'] = 'house'
+            tags['building'] = 'residential'
         if attrs['BLDGTYPE'] == 'HOUSE':
             tags['building'] = 'house'
         if attrs['BLDGTYPE'] == 'MOBIL':
             tags['building'] = 'mobile_home'
+    if 'TYPE' in attrs and attrs['TYPE'] != '':
+        if attrs['TYPE'] == 'TRAILER':
+            tags['building'] = 'static_caravan'
+        if attrs['TYPE'] == 'PUBLIC':
+            tags['building'] = 'public'
+        if attrs['TYPE'] == 'RESERVOIR':
+            tags['building'] = 'yes'
+            tags['man_made'] = 'storage_tank'
     if 'FLOORS' in attrs and attrs['FLOORS'] != '':
         tags['building:levels'] = attrs['FLOORS']
     if 'NAME' in attrs and attrs['NAME'] != '':
@@ -48,7 +56,7 @@ def filterTags(attrs):
         if name[:4] == 'Ymca': name = 'YMCA' + name[4:]
         # if name ends with a 2-letter WWU bldg appreviation, fix that w/ a regex?
         tags['name'] = name
-    if 'YRBUILT' in attrs and attrs['YRBUILT'] != '':
+    if 'YRBUILT' in attrs and attrs['YRBUILT'] > 1800:
         tags['start_date'] = attrs['YRBUILT']
 
     return tags
