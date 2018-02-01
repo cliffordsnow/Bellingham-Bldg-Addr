@@ -31,8 +31,8 @@ Whatcom roads are available as a background layer. The WMS service can be loaded
 ```
 http://tiles.snowandsnow.us/geoserver/wms?service=WMS&request=GetMap&styles=&TRANSPARENT=TRUE&bbox=-1.37021663844817E7,6214544.26722411,-1.35320129795646E7,6275268.80055685&width=768&height=330
 ```
-2.  Press Get Layers, select Whatcom Roads and
-3.  Change the image type to png
+2.  Press Get Layers, select Washington Roads and
+3.  **Change the image type to png** (This creates a transparent background so aerial imagery is visible)
 4.  Name the layer Whatcom Roads
 
 #### Notes
